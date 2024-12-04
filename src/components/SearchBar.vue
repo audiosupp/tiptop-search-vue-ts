@@ -23,7 +23,6 @@ const handleSubmit = () => {
   if (query.value.trim()) {
     emit('search', query.value);
     useTitle(`TipTop ${query.value}`);
-    query.value = '';
   }
 };
 
