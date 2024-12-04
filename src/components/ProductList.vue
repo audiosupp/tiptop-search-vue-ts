@@ -140,13 +140,37 @@ const shopProductCounts = computed(() => {
 const totalProductCount = ref(props.products.length);
 
 // Watch for changes in inputValue to update totalProductCount
+// watch(inputValue, (newValue) => {
+//   if (newValue.trim() === '') {
+//     totalProductCount.value = props.products.length; // Show all products if input is empty
+//   } else {
+//     totalProductCount.value = filteredProducts.value.length; // Show filtered count based on input
+//   }
+// });
+
 watch(inputValue, (newValue) => {
   if (newValue.trim() === '') {
-    totalProductCount.value = props.products.length; // Show all products if input is empty
+    // If input is empty, show all products
+    totalProductCount.value = props.products.length; // Show total number of products
   } else {
-    totalProductCount.value = filteredProducts.value.length; // Show filtered count based on input
+    // Show filtered count based on input value only
+    totalProductCount.value = props.products.filter(product =>
+      product.title.toLowerCase().includes(newValue.toLowerCase()) ||
+      product.shop.toLowerCase().includes(newValue.toLowerCase())
+    ).length;
   }
 });
+
+// watch(selectedShops, () => {
+//   // Recalculate totalProductCount based on current input value and selected shops
+//   if (inputValue.value.trim() === '') {
+//     totalProductCount.value = props.products.length; // Show total number of products
+//   } else {
+//     // Count filtered products based on input value and selected shops
+//     const matchingFilteredProducts = filteredProducts.value;
+//     totalProductCount.value = matchingFilteredProducts.length; // Show filtered count based on input
+//   }
+// });
 
 // Method to handle input changes
 const handleInput = (event: Event) => {
