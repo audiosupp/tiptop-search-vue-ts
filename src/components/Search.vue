@@ -7,12 +7,10 @@
 
     <div class="p-4 w-full overflow-auto max-h-screen">
       <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-        <SearchBar @search="fetchProducts" />
+        <SearchBar :loading="loading" @search="fetchProducts" />
       </div>
 
-      <ProgressSpinner v-if="loading" :class="['flex', !hasSearched ? 'my-8' : 'min-h-screen']" />
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
-
 
       <ProductList v-if="!loading && products.length > 0" :products="products" />
       <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
@@ -30,7 +28,6 @@ import { ref, computed } from 'vue';
 import SearchBar from './SearchBar.vue';
 import ProductList from './ProductList.vue';
 import axios from 'axios';
-import ProgressSpinner from 'primevue/progressspinner';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
 
