@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref, computed } from 'vue';
+import { defineProps, ref, computed, watch } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -91,6 +91,21 @@ const uniqueShops = computed(() => {
 });
 
 // Computed property for filtered products based on search query and selected shops
+// const filteredProducts = computed(() => {
+//   // If no shops are selected and input is empty, show all products
+//   if (selectedShops.value.length === 0 && inputValue.value.trim() === '') {
+//     return props.products; // Show all products
+//   }
+
+//   return props.products.filter(product => {
+//     const matchesShop = selectedShops.value.length === 0 || selectedShops.value.includes(product.shop);
+//     const matchesSearch = product.title.toLowerCase().includes(inputValue.value.toLowerCase()) ||
+//       product.shop.toLowerCase().includes(inputValue.value.toLowerCase());
+//     return matchesShop && matchesSearch;
+//   });
+// });
+
+
 const filteredProducts = computed(() => {
   return props.products.filter(product => {
     const matchesShop = selectedShops.value.length === 0 || selectedShops.value.includes(product.shop);
@@ -103,13 +118,34 @@ const filteredProducts = computed(() => {
 const shopProductCounts = computed(() => {
   const counts: Record<string, number> = {};
   uniqueShops.value.forEach(shop => {
-    counts[shop] = props.products.filter(product => product.shop === shop && product.title.toLocaleLowerCase().includes(inputValue.value.toLowerCase())).length;
+    // Count products that match both the shop and the input value
+    counts[shop] = props.products.filter(product =>
+      product.shop === shop &&
+      product.title.toLowerCase().includes(inputValue.value.toLowerCase())
+    ).length;
   });
   return counts;
 });
 
-const totalProductCount = computed(() => {
-  return filteredProducts.value.length;
+// const totalProductCount = computed(() => {
+//   return filteredProducts.value.length;
+// });
+
+// const totalProductCount = computed(() => {
+//   // Always return the total count of all products
+//   return props.products.length; // This shows the total number of products available
+// });
+
+// Reactive variable to hold the last known total product count
+const totalProductCount = ref(props.products.length);
+
+// Watch for changes in inputValue to update totalProductCount
+watch(inputValue, (newValue) => {
+  if (newValue.trim() === '') {
+    totalProductCount.value = props.products.length; // Show all products if input is empty
+  } else {
+    totalProductCount.value = filteredProducts.value.length; // Show filtered count based on input
+  }
 });
 
 // Method to handle input changes
@@ -129,8 +165,7 @@ const toggleShop = (shop: string) => {
 
 // Method to clear the filter and show all products
 const clearFilter = () => {
-  selectedShops.value = [];
-  inputValue.value = '';
+  selectedShops.value = []; // Clear selected shops
 };
 
 /// Method to show product details in dialog
