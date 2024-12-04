@@ -1,0 +1,66 @@
+<template>
+  <ScrollPanel class="flex flex-col items-center bg-gray-100 min-h-screen">
+    <div v-if="!hasSearched" class="mt-36 flex flex-col items-center">
+      <img src="/src/assets/logo.png" alt="TipTop logo" class="mb-2 w-24" />
+      <h1 class="text-lg font-semibold">TipTop</h1>
+    </div>
+
+    <div class="p-4 w-full overflow-auto max-h-screen">
+      <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
+        <SearchBar @search="fetchProducts" />
+      </div>
+
+      <ProgressSpinner v-if="loading" :class="['flex', !hasSearched ? 'my-8' : 'min-h-screen']" />
+      <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
+
+
+      <ProductList v-if="!loading && products.length > 0" :products="products" />
+      <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
+
+      <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
+        :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
+
+    </div>
+
+  </ScrollPanel>
+</template>
+
+<script lang="ts" setup>
+import { ref, computed } from 'vue';
+import SearchBar from './SearchBar.vue';
+import ProductList from './ProductList.vue';
+import axios from 'axios';
+import ProgressSpinner from 'primevue/progressspinner';
+import ScrollTop from 'primevue/scrolltop';
+import ScrollPanel from 'primevue/scrollpanel';
+
+const products = ref([]);
+const loading = ref(false);
+const error = ref<string | null>(null);
+const query = ref('');
+const hasSearched = ref(false);
+
+const fetchProducts = async (query: string) => {
+  loading.value = true;
+  error.value = null;
+  try {
+    const response = await axios.get(`/api/search?query=${query}`);
+    products.value = response.data;
+    hasSearched.value = true;
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
+};
+
+const pageTitle = computed(() => {
+  return `Поиск по запросу "${query}"` || 'Поисковый запрос';
+});
+</script>
+
+<style scoped>
+.text-center {
+  margin: 20px;
+}
+</style>
