@@ -103,13 +103,13 @@ const filteredProducts = computed(() => {
 const shopProductCounts = computed(() => {
   const counts: Record<string, number> = {};
   uniqueShops.value.forEach(shop => {
-    counts[shop] = props.products.filter(product => product.shop === shop).length;
+    counts[shop] = props.products.filter(product => product.shop === shop && product.title.toLocaleLowerCase().includes(inputValue.value.toLowerCase())).length;
   });
   return counts;
 });
 
 const totalProductCount = computed(() => {
-  return props.products.length;
+  return filteredProducts.value.length;
 });
 
 // Method to handle input changes
