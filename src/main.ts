@@ -1,14 +1,12 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import './style.css'; 
-import router from './router'; 
+import './style.css';
+import router from './router';
 import PrimeVue from 'primevue/config';
 import Nora from '@primevue/themes/nora';
-import "primeicons/primeicons.css";
-import "primeflex/primeflex.css";
+import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
 import Ripple from 'primevue/ripple';
-
-
 
 // const Noir = definePreset(Aura, {
 //   semantic: {
@@ -58,31 +56,19 @@ import Ripple from 'primevue/ripple';
 //   }
 // });
 
-
-
 const app = createApp(App);
-app.use(router); 
-app.use(PrimeVue,{ 
+app.use(router);
+app.use(PrimeVue, {
   theme: {
-      preset: Nora,
-      options: {
-        prefix: 'p',
-        darkModeSelector: 'system',
-        cssLayer: false
-    }
+    preset: Nora,
+    options: {
+      prefix: 'p',
+      darkModeSelector: 'system',
+      cssLayer: false,
+    },
   },
-  // zIndex: {
-  //   modal: 1100,        //dialog, drawer
-  //   overlay: 1000,      //select, popover
-  //   menu: 1000,         //overlay menus
-  //   tooltip: 1100,
-  //   galleria: 2000      //tooltip
-  // }
 });
 app.use(PrimeVue, { ripple: true });
 app.directive('ripple', Ripple);
-
-
-
 
 app.mount('#app');

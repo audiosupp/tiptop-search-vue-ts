@@ -2,10 +2,10 @@
   <Dialog ref="maxDialog" :visible="isVisible" maximizable header="Title" class="w-full" @show="biggifyDialog">
     <div class="container p-8">
       <Carousel class="" :value="images" :numVisible="1" :responsiveOptions="responsiveOptions" circular>
-        <template #item="item">
+        <template #item="{ data }">
           <div class="img-container p-36">
-            <Image :src="item.data.url" :alt="item" class="img" @click="$emit('close')" />
-            <a :href="item.data.productUrl" class="img-link"><span class="mb-4 font-medium">{{ item.data.productTitle
+            <Image :src="data.url" :alt="data.productTitle" class="img" @click="$emit('close')" />
+            <a :href="data.productUrl" class="img-link"><span class="mb-4 font-medium">{{ data.productTitle
                 }}</span></a>
           </div>
         </template>
@@ -15,19 +15,13 @@
 </template>
 
 <script lang='ts' setup>
-import { defineProps, ref, watch, onMounted } from 'vue';
-import Galleria from 'primevue/galleria';
+import { defineProps, ref } from 'vue';
 import Image from 'primevue/image';
 import Dialog from 'primevue/dialog';
 import Carousel from 'primevue/carousel';
-import Button from 'primevue/button';
-import Tag from 'primevue/tag';
 
 
-
-// Reference to the dialog instance
 const maxDialog = ref<InstanceType<typeof Dialog> | null>(null);
-
 // Function to maximize the dialog
 function biggifyDialog() {
   if (maxDialog.value) {
@@ -37,13 +31,19 @@ function biggifyDialog() {
 
 const displayBasic = ref(false);
 
+interface FetchedImage {
+  url: string;
+  productUrl: string;
+  productTitle: string;
+}
+
 const props = defineProps<{
-  images: { url: string }[];
+  images: FetchedImage[];
   isVisible: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'close'): void; // Emit close event to parent
+  (e: 'close'): void;
 }>();
 
 const responsiveOptions = ref([
@@ -75,10 +75,6 @@ const responsiveOptions = ref([
 </script>
 
 <style scoped>
-/* .no-images {
-  text-align: center;
-} */
-
 .container {
   max-height: 80vh;
   position: fixed;
@@ -118,9 +114,4 @@ const responsiveOptions = ref([
   width: 900px;
   line-break: strict;
 }
-
-/* .w-100 {
-  width: 50% !important;
-  height: 50%;
-} */
 </style>

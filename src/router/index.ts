@@ -4,9 +4,17 @@ import Search from '../components/Search.vue';
 import Login from '../components/Login.vue';
 
 const routes = [
-  { path: '/', component: Search, meta: { requiresAuth: true, title: 'Поиск'  } },
+  {
+    path: '/',
+    component: Search,
+    meta: { requiresAuth: true, title: 'Поиск' },
+  },
   { path: '/login', component: Login, meta: { title: 'Логин' } },
-  { path: '/search', component: Search, meta: { requiresAuth: true, title: 'Поиск'  } },
+  {
+    path: '/search',
+    component: Search,
+    meta: { requiresAuth: true, title: 'Поиск' },
+  },
 ];
 
 const router = createRouter({
@@ -23,7 +31,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next(); // Proceed to the route
   }
-  
 });
 
 export default router;

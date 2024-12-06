@@ -1,13 +1,10 @@
 <template>
-
   <ScrollPanel>
-
     <div class="filter relative w-full">
       <i class="pi pi-filter absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400"></i>
       <InputText v-model="inputValue" placeholder="Фильтр по названию или магазину" @input="handleInput"
         class="pl-10 w-full" size="large" />
     </div>
-
 
     <div class="shopButtons">
       <Button @click="clearFilter" :severity="selectedShops.length === 0 ? 'p-success' : 'secondary'" label="ВСЕ"
@@ -62,9 +59,7 @@
 
     <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
       :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
-
   </ScrollPanel>
-
 </template>
 
 <script lang="ts" setup>
@@ -74,23 +69,10 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import Dialog from 'primevue/dialog';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
 import ImageModal from './ImageModal.vue';
-import Galleria from 'primevue/galleria';
 import ProgressSpinner from 'primevue/progressspinner';
-
-import Image from 'primevue/image';
-
-
-import { usePrimeVue } from "primevue/config";
-
-const $primevue = usePrimeVue();
-defineExpose({
-  $primevue
-})
-
 
 interface Product {
   title: string;
@@ -101,9 +83,9 @@ interface Product {
 }
 
 interface FetchedImage {
-  url: string; // Image URL
-  productUrl: string; // Product URL
-  productTitle: string; // Product Title
+  url: string;
+  productUrl: string;
+  productTitle: string;
 }
 
 const props = defineProps<{
@@ -118,20 +100,16 @@ const selectedProduct = ref<Product | null>(null);
 const totalProductCount = ref(props.products.length);
 
 const fetchedImages = ref<FetchedImage[]>([]);
-//const fetchedImages = ref<{ url: string }[]>([]);
 const loadingImage = ref(true);
 const loadingImages = ref<Record<string, boolean>>({});
 const loadingProduct = ref<Record<string, boolean>>({});
 
 const onImageLoad = (url: string) => {
-  // Mark this image as loaded
   loadingImages.value[url] = false;
 };
-// Function to handle when an image fails to load
 const onImageError = (url: string) => {
-  // Optionally handle errors, e.g., set a default image or log
   console.warn(`Failed to load image at ${url}`);
-  loadingImages.value[url] = false; // Set loading to false if there's an error
+  loadingImages.value[url] = false;
 };
 
 const emit = defineEmits<{
@@ -144,8 +122,6 @@ const uniqueShops = computed(() => {
   return Array.from(shops);
 });
 
-
-
 const filteredProducts = computed(() => {
   const products = props.products.filter(product => {
     const matchesShop = selectedShops.value.length === 0 || selectedShops.value.includes(product.shop);
@@ -154,9 +130,8 @@ const filteredProducts = computed(() => {
     return matchesShop && matchesSearch;
   });
 
-  // Initialize loading states for images
   products.forEach(product => {
-    loadingImages.value[product.image] = true; // Set all images to loading initially
+    loadingImages.value[product.image] = true;
   });
 
   return products;
@@ -165,7 +140,6 @@ const filteredProducts = computed(() => {
 const shopProductCounts = computed(() => {
   const counts: Record<string, number> = {};
   uniqueShops.value.forEach(shop => {
-    // Count products that match both the shop and the input value
     counts[shop] = props.products.filter(product =>
       product.shop === shop &&
       product.title.toLowerCase().includes(inputValue.value.toLowerCase())
@@ -174,12 +148,9 @@ const shopProductCounts = computed(() => {
   return counts;
 });
 
-
-
-
 watch(inputValue, (newValue) => {
   if (newValue.trim() === '') {
-    totalProductCount.value = props.products.length; // Show total number of products
+    totalProductCount.value = props.products.length;
   } else {
     totalProductCount.value = props.products.filter(product =>
       product.title.toLowerCase().includes(newValue.toLowerCase()) ||
@@ -193,12 +164,11 @@ const handleInput = (event: Event) => {
   inputValue.value = (event.target as HTMLInputElement).value;
 };
 
-
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(price).replace(/,/g, '.'); // Replace commas with dots
+  }).format(price).replace(/,/g, '.');
 };
 
 const toggleShop = (shop: string) => {
@@ -210,7 +180,6 @@ const toggleShop = (shop: string) => {
   }
 };
 
-
 const clearFilter = () => {
   selectedShops.value = [];
 };
@@ -218,13 +187,11 @@ const clearFilter = () => {
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {
     const response = await axios.get(`/api/pictures?shop=${shop}&url=${url}`);
-    console.log(response.data);
 
     if (Array.isArray(response.data) && response.data.length > 0) {
-      // Map each image URL with the product URL
       fetchedImages.value = response.data.map(imageUrl => ({
         url: imageUrl,
-        productUrl: url, // Use the same product URL for all images
+        productUrl: url,
         productTitle: selectedProduct.value?.title
       }));
     } else {
@@ -242,59 +209,16 @@ const fetchImagesForProduct = async (shop: string, url: string) => {
   }
 };
 
-// Method to show product details in dialog
 const showProductDetails = async (product: Product) => {
-  // Set loading state for this product
-  loadingProduct.value[product.url] = true; // Start loading
-
-  selectedProduct.value = product; // Set selected product
-  await fetchImagesForProduct(product.shop, product.url); // Fetch images for this product
-
-  // After fetching images, reset loading state
-  loadingProduct.value[product.url] = false; // Stop loading
-  isDialogVisible.value = true; // Open dialog/modal only after fetching
+  loadingProduct.value[product.url] = true;
+  selectedProduct.value = product;
+  await fetchImagesForProduct(product.shop, product.url);
+  loadingProduct.value[product.url] = false;
+  isDialogVisible.value = true;
 };
 </script>
 
 <style scoped>
-/* .image-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5rem;
-  height: 5rem;
-}
-
-.tableImages {
-  width: 3rem;
-  height: auto;
-
-}
-
-
-.spinner-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.progress-spinner {
-  position: fixed;
-  z-index: 999;
-  height: 2em;
-  width: 2em;
-  overflow: show;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-}
-  
- */
-
 .image-container {
   position: relative;
   width: 5rem;

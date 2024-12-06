@@ -17,7 +17,7 @@ import InputText from 'primevue/inputtext';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps<{
-  loading: boolean; // Accept loading as a prop
+  loading: boolean;
 }>();
 
 const emit = defineEmits<{

@@ -5,7 +5,6 @@
       <h1 class="text-lg font-semibold">TipTop</h1>
     </div>
 
-
     <div class="p-4 w-full overflow-auto max-h-screen">
       <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
         <SearchBar :loading="loading" @search="fetchProducts" />
@@ -19,7 +18,6 @@
 
       <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
         :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
-
     </div>
   </ScrollPanel>
 </template>
@@ -37,8 +35,6 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const query = ref('');
 const hasSearched = ref(false);
-
-
 
 const fetchProducts = async (query: string) => {
   loading.value = true;
