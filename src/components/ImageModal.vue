@@ -21,7 +21,7 @@ import Dialog from 'primevue/dialog';
 import Carousel from 'primevue/carousel';
 
 
-const maxDialog = ref<InstanceType<typeof Dialog> | null>(null);
+const maxDialog = ref<InstanceType<typeof Dialog> | any>(null);
 // Function to maximize the dialog
 function biggifyDialog() {
   if (maxDialog.value) {

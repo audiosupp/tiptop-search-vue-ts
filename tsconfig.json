@@ -9,11 +9,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
+    "noEmit": true,
     "paths": {
       "@/*": [
         "src/*"
-      ] // Optional: if you use aliases
-    }
+      ]
+    },
   },
   "include": [
     "src/**/*.ts",

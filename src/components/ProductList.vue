@@ -55,7 +55,7 @@
     </div>
 
     <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="isDialogVisible = false"
-      @update:visible="$event => isDialogVisible = $event" />
+      @update:visible="(event: boolean) => isDialogVisible = event" />
 
     <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
       :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
@@ -192,14 +192,14 @@ const fetchImagesForProduct = async (shop: string, url: string) => {
       fetchedImages.value = response.data.map(imageUrl => ({
         url: imageUrl,
         productUrl: url,
-        productTitle: selectedProduct.value?.title
+        productTitle: selectedProduct.value?.title || "Перейти на товар"
       }));
     } else {
       // If no images are found, use the main product image
       fetchedImages.value = [{
-        url: selectedProduct.value?.image,
+        url: selectedProduct.value?.image as string,
         productUrl: url,
-        productTitle: selectedProduct.value?.title
+        productTitle: selectedProduct.value?.title || "Перейти на товар"
       }];
     }
     console.log(fetchedImages);

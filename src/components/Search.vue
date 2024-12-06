@@ -43,8 +43,8 @@ const fetchProducts = async (query: string) => {
     const response = await axios.get(`/api/search?query=${query}`);
     products.value = response.data;
     hasSearched.value = true;
-  } catch (err) {
-    error.value = err.message;
+  } catch (err: unknown) {
+    error.value = (err as Error).message;
   } finally {
     loading.value = false;
   }
