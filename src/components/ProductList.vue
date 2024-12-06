@@ -100,6 +100,12 @@ interface Product {
   image: string;
 }
 
+interface FetchedImage {
+  url: string; // Image URL
+  productUrl: string; // Product URL
+  productTitle: string; // Product Title
+}
+
 const props = defineProps<{
   products: Product[];
 }>();
@@ -111,7 +117,8 @@ const isDialogVisible = ref(false);
 const selectedProduct = ref<Product | null>(null);
 const totalProductCount = ref(props.products.length);
 
-const fetchedImages = ref<{ url: string }[]>([]);
+const fetchedImages = ref<FetchedImage[]>([]);
+//const fetchedImages = ref<{ url: string }[]>([]);
 const loadingImage = ref(true);
 const loadingImages = ref<Record<string, boolean>>({});
 const loadingProduct = ref<Record<string, boolean>>({});
@@ -211,33 +218,29 @@ const clearFilter = () => {
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {
     const response = await axios.get(`/api/pictures?shop=${shop}&url=${url}`);
+    console.log(response.data);
 
-    // Check if response.data is an array and has images
     if (Array.isArray(response.data) && response.data.length > 0) {
-      fetchedImages.value = response.data; // Use fetched images from API
+      // Map each image URL with the product URL
+      fetchedImages.value = response.data.map(imageUrl => ({
+        url: imageUrl,
+        productUrl: url, // Use the same product URL for all images
+        productTitle: selectedProduct.value?.title
+      }));
     } else {
       // If no images are found, use the main product image
-      fetchedImages.value = [selectedProduct.value?.image]; // Ensure it matches expected structure
+      fetchedImages.value = [{
+        url: selectedProduct.value?.image,
+        productUrl: url,
+        productTitle: selectedProduct.value?.title
+      }];
     }
-
-    // Set loadingImage to true and then set it to false after a delay
-    // loadingImage.value = true; // Start loading
-    // setTimeout(() => {
-    //   loadingImage.value = false; // Stop loading after delay
-    // }, 1000); // Delay of 1 second
-
+    console.log(fetchedImages);
   } catch (error) {
     console.error('Error fetching images:', error);
     loadingImage.value = false;
   }
 };
-
-/// Method to show product details in dialog
-// const showProductDetails = async (product: Product) => {
-//   selectedProduct.value = product; // Set selected product
-//   await fetchImagesForProduct(product.shop, product.url);
-//   isDialogVisible.value = true; // Open dialog/modal only after fetching
-// };
 
 // Method to show product details in dialog
 const showProductDetails = async (product: Product) => {

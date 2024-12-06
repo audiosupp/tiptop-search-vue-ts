@@ -4,8 +4,9 @@
       <Carousel class="" :value="images" :numVisible="1" :responsiveOptions="responsiveOptions" circular>
         <template #item="item">
           <div class="img-container p-36">
-            <Image :src="item.data" :alt="item" class="img" @click="$emit('close')" />
-            <a href="" class="img-link"><span class="mb-4 font-medium">{{ item.data }}</span></a>
+            <Image :src="item.data.url" :alt="item" class="img" @click="$emit('close')" />
+            <a :href="item.data.productUrl" class="img-link"><span class="mb-4 font-medium">{{ item.data.productTitle
+                }}</span></a>
           </div>
         </template>
       </Carousel>
