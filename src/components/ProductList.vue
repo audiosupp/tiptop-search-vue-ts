@@ -57,14 +57,8 @@
       </div>
     </div>
 
-
-    <!-- <ProgressSpinner class="spinner-icon" strokeWidth="8" fill="transparent" animationDuration=".5s"
-      aria-label="Custom ProgressSpinner" /> -->
-    <!-- <Dialog :visible="isDialogVisible" header="Product Images" :modal="true" :closable="true" :dismissableMask="true"
-      @update:visible="$event => isDialogVisible = $event"> -->
     <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="isDialogVisible = false"
       @update:visible="$event => isDialogVisible = $event" />
-    <!-- </Dialog> -->
 
     <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
       :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
@@ -214,12 +208,9 @@ const clearFilter = () => {
   selectedShops.value = [];
 };
 
-/// Method to fetch images for a specific product
-/// Method to fetch images for a specific product
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {
     const response = await axios.get(`/api/pictures?shop=${shop}&url=${url}`);
-    //console.log('Fetched images:', response.data); // Debug log for fetched data
 
     // Check if response.data is an array and has images
     if (Array.isArray(response.data) && response.data.length > 0) {
@@ -227,21 +218,16 @@ const fetchImagesForProduct = async (shop: string, url: string) => {
     } else {
       // If no images are found, use the main product image
       fetchedImages.value = [selectedProduct.value?.image]; // Ensure it matches expected structure
-      //console.warn('No images found for this product. Using main image instead.'); // Log warning
     }
 
-    //console.log('Fetched Images State:', fetchedImages.value); // Debugging line
-
     // Set loadingImage to true and then set it to false after a delay
-    loadingImage.value = true; // Start loading
-    setTimeout(() => {
-      loadingImage.value = false; // Stop loading after delay
-    }, 1000); // Delay of 1 second
+    // loadingImage.value = true; // Start loading
+    // setTimeout(() => {
+    //   loadingImage.value = false; // Stop loading after delay
+    // }, 1000); // Delay of 1 second
 
   } catch (error) {
     console.error('Error fetching images:', error);
-
-    // If there's an error, stop loading immediately
     loadingImage.value = false;
   }
 };
