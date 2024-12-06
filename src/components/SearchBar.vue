@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit" class="flex justify-center w-full mt-4 input-searchbar-wrapper">
     <div class="input-icon-wrapper">
-      <InputText v-model="query" placeholder="Поиск" :loading="loading" class="w-full" />
+      <InputText v-model="query" placeholder="Поиск" :loading="loading" class="w-full" size="large" />
 
       <i v-if="!loading" class="pi pi-search search-icon"></i>
       <ProgressSpinner v-if="loading" class="spinner-icon" strokeWidth="8" fill="transparent" animationDuration=".5s"
@@ -29,7 +29,7 @@ const query = ref('');
 const handleSubmit = async () => {
   if (query.value.trim()) {
     emit('search', query.value);
-    useTitle(`TipTop ${query.value}`);
+    useTitle(`${query.value} - TipTop`);
   }
 };
 </script>
@@ -53,8 +53,8 @@ const handleSubmit = async () => {
 }
 
 .spinner-icon {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   position: absolute;
   left: 10px;
   top: 50%;
