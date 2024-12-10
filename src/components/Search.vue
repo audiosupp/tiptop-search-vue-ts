@@ -7,7 +7,7 @@
 
     <div class="p-4 w-full overflow-auto max-h-screen">
       <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-        <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
+        <SearchBar :loading="loading" :query="query" @search="debouncedFetchProducts" />
       </div>
 
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>

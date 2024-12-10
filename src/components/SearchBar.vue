@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit" class="flex justify-center w-full mt-4 input-searchbar-wrapper">
     <div class="input-icon-wrapper">
-      <InputText v-model="query" placeholder="Поиск" :loading="loading" class="w-full" size="large" />
+      <InputText v-model="localQuery" placeholder="Поиск" :loading="loading" class="w-full" size="large" />
 
       <i v-if="!loading" class="pi pi-search search-icon"></i>
       <ProgressSpinner v-if="loading" class="spinner-icon" strokeWidth="8" fill="transparent" animationDuration=".5s"
@@ -11,26 +11,34 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, watch } from 'vue';
 import { useTitle } from '@vueuse/core';
 import InputText from 'primevue/inputtext';
 import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps<{
   loading: boolean;
-  query: string;
+  query: string; // Receive the query as a prop
 }>();
 
 const emit = defineEmits<{
   (e: 'search', query: string): void;
 }>();
 
-const query = ref('');
+// Local query to bind to the input field
+const localQuery = ref(props.query);
+useTitle(`${localQuery.value} - TipTop`);
+
+
+// Watch for changes in the prop query and update localQuery
+watch(() => props.query, (newQuery) => {
+  localQuery.value = newQuery;
+});
 
 const handleSubmit = async () => {
-  if (query.value.trim()) {
-    emit('search', query.value);
-    useTitle(`${query.value} - TipTop`);
+  if (localQuery.value.trim()) {
+    emit('search', localQuery.value);
+    useTitle(`${localQuery.value} - TipTop`);
   }
 };
 </script>
