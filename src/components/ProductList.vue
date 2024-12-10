@@ -90,7 +90,10 @@ interface FetchedImage {
 
 const props = defineProps<{
   products: Product[];
+  api_url: string;
 }>();
+
+const fetchedImages = ref<FetchedImage[]>([]);
 
 const loading = ref(false);
 const inputValue = ref('');
@@ -99,7 +102,7 @@ const isDialogVisible = ref(false);
 const selectedProduct = ref<Product | null>(null);
 const totalProductCount = ref(props.products.length);
 
-const fetchedImages = ref<FetchedImage[]>([]);
+
 const loadingImage = ref(true);
 const loadingImages = ref<Record<string, boolean>>({});
 const loadingProduct = ref<Record<string, boolean>>({});
@@ -186,7 +189,7 @@ const clearFilter = () => {
 
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {
-    const response = await axios.get(`/api/pictures?shop=${shop}&url=${url}`);
+    const response = await axios.get(`${props.api_url}/api/pictures?shop=${shop}&url=${url}`);
 
     if (Array.isArray(response.data) && response.data.length > 0) {
       fetchedImages.value = response.data.map(imageUrl => ({
@@ -202,7 +205,6 @@ const fetchImagesForProduct = async (shop: string, url: string) => {
         productTitle: selectedProduct.value?.title || "Перейти на товар"
       }];
     }
-    console.log(fetchedImages);
   } catch (error) {
     console.error('Error fetching images:', error);
     loadingImage.value = false;

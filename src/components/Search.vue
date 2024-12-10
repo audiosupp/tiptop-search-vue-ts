@@ -12,7 +12,7 @@
 
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
       <Transition>
-        <ProductList v-if="!loading && products.length > 0" :products="products" />
+        <ProductList v-if="!loading && products.length > 0" :products="products" :api_url="API_URL" />
       </Transition>
       <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
 
@@ -35,12 +35,13 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const query = ref('');
 const hasSearched = ref(false);
+const API_URL = import.meta.env.VITE_API_URL;
 
 const fetchProducts = async (query: string) => {
   loading.value = true;
   error.value = null;
   try {
-    const response = await axios.get(`/api/search?query=${query}`);
+    const response = await axios.get(`${API_URL}/api/search?query=${query}`);
     products.value = response.data;
     hasSearched.value = true;
   } catch (err: unknown) {

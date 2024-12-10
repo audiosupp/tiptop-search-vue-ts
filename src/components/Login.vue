@@ -27,6 +27,7 @@ import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import ProgressSpinner from 'primevue/progressspinner';
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 const username = ref('');
 const password = ref('');
@@ -39,7 +40,7 @@ const handleSubmit = async () => {
   error.value = null;
 
   try {
-    const response = await axios.post('/api/login', { username: username.value, password: password.value });
+    const response = await axios.post(`${API_URL}/api/login`, { username: username.value, password: password.value });
     localStorage.setItem('jwt', response.data.token);
     router.push('/search');
   } catch (err) {
