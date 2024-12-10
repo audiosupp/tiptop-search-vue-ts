@@ -1,18 +1,18 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router';
-import Search from '../components/Search.vue';
+import Index from '../components/Index.vue';
 import Login from '../components/Login.vue';
 
 const routes = [
   {
     path: '/',
-    component: Search,
+    component: Index,
     meta: { requiresAuth: true, title: 'Поиск' },
   },
   { path: '/login', component: Login, meta: { title: 'Логин' } },
   {
     path: '/search',
-    component: Search,
+    component: Index,
     meta: { requiresAuth: true, title: 'Поиск' },
   },
 ];
@@ -23,13 +23,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = localStorage.getItem('jwt') !== null; // Check if JWT exists in local storage
+  const isAuthenticated = localStorage.getItem('jwt') !== null;
   if (to.path === '/' && !isAuthenticated) {
-    next({ path: '/login' }); // Redirect to login if not authenticated on root path
+    next({ path: '/login' });
   } else if (to.meta.requiresAuth && !isAuthenticated) {
-    next({ path: '/login' }); // Redirect to login if not authenticated for other routes
+    next({ path: '/login' });
   } else {
-    next(); // Proceed to the route
+    next();
   }
 });
 

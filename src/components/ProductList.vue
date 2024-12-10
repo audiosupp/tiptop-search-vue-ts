@@ -1,6 +1,10 @@
 <template>
   <ScrollPanel>
-    <div class="filter relative w-full">
+    <Filter :inputValue="inputValue" @update:inputValue="inputValue = $event" :selectedShops="selectedShops"
+      :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
+      @update:selectedShops="selectedShops = $event" />
+
+    <!-- <div class="filter relative w-full">
       <i class="pi pi-filter absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400"></i>
       <InputText v-model="inputValue" placeholder="Фильтр по названию или магазину" @input="handleInput"
         class="pl-10 w-full" size="large" />
@@ -14,10 +18,14 @@
         :severity="selectedShops.includes(shop) ? 'p-success' : 'secondary'" :label="shop"
         :badge="shopProductCounts[shop].toString()"
         :badgeSeverity="selectedShops.includes(shop) ? 'secondary' : 'p-success'" size="small" class="btn" raised />
-    </div>
+    </div> -->
 
-    <div>
-      <DataTable v-if="filteredProducts.length > 0" :value="filteredProducts" :loading="loading" rowKey="url"
+    <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
+      :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
+      :formatPrice="formatPrice" />
+
+
+    <!-- <DataTable v-if="filteredProducts.length > 0" :value="filteredProducts" :loading="loading" rowKey="url"
         :scrollable="true" class="p-component">
         <Column field="image" header="">
           <template #body="{ data }">
@@ -29,30 +37,26 @@
                 aria-label="Loading" class="spinner" />
             </div>
           </template>
-        </Column>
+</Column>
 
-        <Column field="title" header="НАИМЕНОВАНИЕ" sortable />
+<Column field="title" header="НАИМЕНОВАНИЕ" sortable />
 
-        <Column field="shop" header="" />
+<Column field="shop" header="" />
 
-        <Column field="url" header="">
-          <template #body="{ data }">
+<Column field="url" header="">
+  <template #body="{ data }">
             <a :href="data.url" target="_blank" rel="noopener noreferrer">Перейти</a>
           </template>
-        </Column>
+</Column>
 
-        <Column field="price" header="ЦЕНА" sortable>
-          <template #body="{ data }">
+<Column field="price" header="ЦЕНА" sortable>
+  <template #body="{ data }">
             <span class="font-bold">{{ formatPrice(data.price) }} MDL</span>
           </template>
-        </Column>
-      </DataTable>
+</Column>
+</DataTable> -->
 
-      <div v-if="filteredProducts.length === 0" class="no-results">
-        <i class="pi pi-times"></i>
-        <p>Ничего не найдено.</p>
-      </div>
-    </div>
+
 
     <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="isDialogVisible = false"
       @update:visible="(event: boolean) => isDialogVisible = event" />
@@ -73,6 +77,8 @@ import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
 import ImageModal from './ImageModal.vue';
 import ProgressSpinner from 'primevue/progressspinner';
+import Filter from './Filter.vue';
+import ProductTable from './ProductTable.vue';
 
 interface Product {
   title: string;
@@ -92,6 +98,7 @@ const props = defineProps<{
   products: Product[];
   api_url: string;
 }>();
+
 
 const fetchedImages = ref<FetchedImage[]>([]);
 
@@ -220,78 +227,4 @@ const showProductDetails = async (product: Product) => {
 };
 </script>
 
-<style scoped>
-.image-container {
-  position: relative;
-  width: 5rem;
-  height: 5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
-.tableImages {
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.spinner {
-  position: absolute;
-  width: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.progress-spinner:before {
-  content: '';
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.53);
-}
-
-
-.modal-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.filter {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.relative {
-  position: relative;
-}
-
-.p-inputtext {
-  padding-left: 30px;
-}
-
-.pi-filter {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.shopButtons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.no-results {
-  text-align: center;
-  margin-top: 6rem;
-}
-</style>
+<style scoped></style>

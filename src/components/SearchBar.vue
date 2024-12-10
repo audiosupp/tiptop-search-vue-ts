@@ -18,6 +18,7 @@ import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps<{
   loading: boolean;
+  query: string;
 }>();
 
 const emit = defineEmits<{

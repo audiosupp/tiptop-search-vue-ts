@@ -7,7 +7,7 @@
 
     <div class="p-4 w-full overflow-auto max-h-screen">
       <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-        <SearchBar :loading="loading" @search="fetchProducts" />
+        <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
       </div>
 
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
@@ -23,12 +23,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import SearchBar from './SearchBar.vue';
 import ProductList from './ProductList.vue';
 import axios from 'axios';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
+
+
+const route = useRoute();
+const router = useRouter();
 
 const products = ref([]);
 const loading = ref(false);
@@ -37,6 +42,19 @@ const query = ref('');
 const hasSearched = ref(false);
 const API_URL = import.meta.env.VITE_API_URL;
 
+
+function debounce(func: Function, delay: number) {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return (...args: any[]) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
+
 const fetchProducts = async (query: string) => {
   loading.value = true;
   error.value = null;
@@ -44,16 +62,34 @@ const fetchProducts = async (query: string) => {
     const response = await axios.get(`${API_URL}/api/search?query=${query}`);
     products.value = response.data;
     hasSearched.value = true;
-  } catch (err: unknown) {
+
+    router.push({ path: '/search', query: { query } });
+  } catch (err) {
     error.value = (err as Error).message;
   } finally {
     loading.value = false;
   }
 };
 
-const pageTitle = computed(() => {
-  return `Поиск по запросу "${query}"` || 'Поисковый запрос';
+const debouncedFetchProducts = debounce(fetchProducts, 1000);
+
+// Watch for changes in route query parameters and fetch products accordingly
+watch(() => route.query.query, (newQuery) => {
+  if (newQuery) {
+    query.value = newQuery as string;
+    fetchProducts(newQuery as string);
+  }
 });
+
+// Check if there's a query in the URL when the component is mounted
+if (route.query.query) {
+  query.value = route.query.query as string;
+  fetchProducts(route.query.query as string);
+}
+
+// const pageTitle = computed(() => {
+//   return `Поиск по запросу "${query}"` || 'Поисковый запрос';
+// });
 </script>
 
 <style scoped>
