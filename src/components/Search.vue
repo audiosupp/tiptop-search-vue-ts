@@ -6,12 +6,10 @@
     </div>
 
     <div class="p-4 w-full overflow-auto max-h-screen">
-      <Transition name="slide-fade" appear>
-        <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-          <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
-        </div>
-      </Transition>
 
+      <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
+        <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
+      </div>
 
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
       <Transition>
@@ -34,7 +32,6 @@ import ProductList from './ProductList.vue';
 import axios from 'axios';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
-
 
 const route = useRoute();
 const router = useRouter();
@@ -62,6 +59,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const fetchProducts = async (query: string) => {
   loading.value = true;
   error.value = null;
+
   try {
     const response = await axios.get(`${API_URL}/api/search?query=${query}`);
     products.value = response.data;
@@ -72,6 +70,7 @@ const fetchProducts = async (query: string) => {
     error.value = (err as Error).message;
   } finally {
     loading.value = false;
+
   }
 };
 
@@ -103,17 +102,6 @@ if (route.query.query) {
 
 .v-enter-from,
 .v-leave-to {
-  opacity: 0;
-}
-
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.5s ease;
-}
-
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateY(-20px);
   opacity: 0;
 }
 </style>
