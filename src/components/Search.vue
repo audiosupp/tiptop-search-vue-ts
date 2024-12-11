@@ -6,9 +6,12 @@
     </div>
 
     <div class="p-4 w-full overflow-auto max-h-screen">
-      <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-        <SearchBar :loading="loading" :query="query" @search="debouncedFetchProducts" />
-      </div>
+      <Transition name="slide-fade" appear>
+        <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
+          <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
+        </div>
+      </Transition>
+
 
       <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
       <Transition>
@@ -19,11 +22,12 @@
       <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
         :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
     </div>
+
   </ScrollPanel>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import SearchBar from './SearchBar.vue';
 import ProductList from './ProductList.vue';
@@ -43,17 +47,17 @@ const hasSearched = ref(false);
 const API_URL = import.meta.env.VITE_API_URL;
 
 
-function debounce(func: Function, delay: number) {
-  let timeoutId: ReturnType<typeof setTimeout>;
-  return (...args: any[]) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      func(...args);
-    }, delay);
-  };
-}
+// function debounce(func: Function, delay: number) {
+//   let timeoutId: ReturnType<typeof setTimeout>;
+//   return (...args: any[]) => {
+//     if (timeoutId) {
+//       clearTimeout(timeoutId);
+//     }
+//     timeoutId = setTimeout(() => {
+//       func(...args);
+//     }, delay);
+//   };
+// }
 
 const fetchProducts = async (query: string) => {
   loading.value = true;
@@ -71,7 +75,7 @@ const fetchProducts = async (query: string) => {
   }
 };
 
-const debouncedFetchProducts = debounce(fetchProducts, 1000);
+// const debouncedFetchProducts = debounce(fetchProducts, 1000);
 
 watch(() => route.query.query, (newQuery) => {
   if (newQuery) {
@@ -99,6 +103,17 @@ if (route.query.query) {
 
 .v-enter-from,
 .v-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  transform: translateY(-20px);
   opacity: 0;
 }
 </style>

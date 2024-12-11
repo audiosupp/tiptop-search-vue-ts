@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import axios from 'axios';
-import { defineProps, defineEmits, ref, computed, watch } from 'vue';
+import { defineProps, ref, computed, watch } from 'vue';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
 import ImageModal from './ImageModal.vue';
