@@ -18,19 +18,16 @@ import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps<{
   loading: boolean;
-  query: string; // Receive the query as a prop
+  query: string;
 }>();
 
 const emit = defineEmits<{
   (e: 'search', query: string): void;
 }>();
 
-// Local query to bind to the input field
 const localQuery = ref(props.query);
 useTitle(`${localQuery.value} - TipTop`);
 
-
-// Watch for changes in the prop query and update localQuery
 watch(() => props.query, (newQuery) => {
   localQuery.value = newQuery;
 });

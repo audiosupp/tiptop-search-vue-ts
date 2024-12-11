@@ -73,7 +73,6 @@ const fetchProducts = async (query: string) => {
 
 const debouncedFetchProducts = debounce(fetchProducts, 1000);
 
-// Watch for changes in route query parameters and fetch products accordingly
 watch(() => route.query.query, (newQuery) => {
   if (newQuery) {
     query.value = newQuery as string;
@@ -81,15 +80,11 @@ watch(() => route.query.query, (newQuery) => {
   }
 });
 
-// Check if there's a query in the URL when the component is mounted
 if (route.query.query) {
   query.value = route.query.query as string;
   fetchProducts(route.query.query as string);
 }
 
-// const pageTitle = computed(() => {
-//   return `Поиск по запросу "${query}"` || 'Поисковый запрос';
-// });
 </script>
 
 <style scoped>

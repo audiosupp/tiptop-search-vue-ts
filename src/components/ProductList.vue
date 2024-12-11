@@ -4,59 +4,9 @@
       :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
       @update:selectedShops="selectedShops = $event" />
 
-    <!-- <div class="filter relative w-full">
-      <i class="pi pi-filter absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400"></i>
-      <InputText v-model="inputValue" placeholder="Фильтр по названию или магазину" @input="handleInput"
-        class="pl-10 w-full" size="large" />
-    </div>
-
-    <div class="shopButtons">
-      <Button @click="clearFilter" :severity="selectedShops.length === 0 ? 'p-success' : 'secondary'" label="ВСЕ"
-        :badge="totalProductCount.toString()" :badgeSeverity="selectedShops.length === 0 ? 'secondary' : 'p-success'"
-        size="small" class="btn" raised />
-      <Button v-for="shop in uniqueShops" :key="shop" @click="toggleShop(shop)"
-        :severity="selectedShops.includes(shop) ? 'p-success' : 'secondary'" :label="shop"
-        :badge="shopProductCounts[shop].toString()"
-        :badgeSeverity="selectedShops.includes(shop) ? 'secondary' : 'p-success'" size="small" class="btn" raised />
-    </div> -->
-
     <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
       :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
       :formatPrice="formatPrice" />
-
-
-    <!-- <DataTable v-if="filteredProducts.length > 0" :value="filteredProducts" :loading="loading" rowKey="url"
-        :scrollable="true" class="p-component">
-        <Column field="image" header="">
-          <template #body="{ data }">
-            <div class="image-container">
-              <img v-if="!loadingProduct[data.url]" :src="data.image" alt="картинка продукта" class="tableImages"
-                @click="showProductDetails(data)" @load="onImageLoad(data.image)" @error="onImageError(data.image)"
-                style="cursor: pointer;" />
-              <ProgressSpinner v-if="loadingProduct[data.url]" strokeWidth="3" fill="transparent" animationDuration="1s"
-                aria-label="Loading" class="spinner" />
-            </div>
-          </template>
-</Column>
-
-<Column field="title" header="НАИМЕНОВАНИЕ" sortable />
-
-<Column field="shop" header="" />
-
-<Column field="url" header="">
-  <template #body="{ data }">
-            <a :href="data.url" target="_blank" rel="noopener noreferrer">Перейти</a>
-          </template>
-</Column>
-
-<Column field="price" header="ЦЕНА" sortable>
-  <template #body="{ data }">
-            <span class="font-bold">{{ formatPrice(data.price) }} MDL</span>
-          </template>
-</Column>
-</DataTable> -->
-
-
 
     <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="isDialogVisible = false"
       @update:visible="(event: boolean) => isDialogVisible = event" />
@@ -69,14 +19,9 @@
 <script lang="ts" setup>
 import axios from 'axios';
 import { defineProps, defineEmits, ref, computed, watch } from 'vue';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Button from 'primevue/button';
-import InputText from 'primevue/inputtext';
 import ScrollTop from 'primevue/scrolltop';
 import ScrollPanel from 'primevue/scrollpanel';
 import ImageModal from './ImageModal.vue';
-import ProgressSpinner from 'primevue/progressspinner';
 import Filter from './Filter.vue';
 import ProductTable from './ProductTable.vue';
 
@@ -122,9 +67,9 @@ const onImageError = (url: string) => {
   loadingImages.value[url] = false;
 };
 
-const emit = defineEmits<{
-  (e: 'showModal', shop: string, url: string): void;
-}>();
+// const emit = defineEmits<{
+//   (e: 'showModal', shop: string, url: string): void;
+// }>();
 
 
 const uniqueShops = computed(() => {
@@ -170,9 +115,7 @@ watch(inputValue, (newValue) => {
 });
 
 
-const handleInput = (event: Event) => {
-  inputValue.value = (event.target as HTMLInputElement).value;
-};
+
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
@@ -181,18 +124,6 @@ const formatPrice = (price: number): string => {
   }).format(price).replace(/,/g, '.');
 };
 
-const toggleShop = (shop: string) => {
-  const index = selectedShops.value.indexOf(shop);
-  if (index === -1) {
-    selectedShops.value.push(shop);
-  } else {
-    selectedShops.value.splice(index, 1);
-  }
-};
-
-const clearFilter = () => {
-  selectedShops.value = [];
-};
 
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {

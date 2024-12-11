@@ -55,10 +55,10 @@ const props = defineProps<{
   filteredProducts: Product[];
   loading: boolean;
   loadingProduct: Record<string, boolean>;
-  showProductDetails: (product: Product) => void; // Add this prop to handle showing details
-  onImageLoad: (url: string) => void; // Prop for image load handling
-  onImageError: (url: string) => void; // Prop for image error handling
-  formatPrice: (price: number) => string; // Prop for formatting price
+  showProductDetails: (product: Product) => void;
+  onImageLoad: (url: string) => void;
+  onImageError: (url: string) => void;
+  formatPrice: (price: number) => string;
 }>();
 </script>
 

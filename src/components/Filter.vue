@@ -22,7 +22,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 
 const props = defineProps<{
-  inputValue: string; // Prop for input value
+  inputValue: string;
   selectedShops: string[];
   uniqueShops: string[];
   totalProductCount: number;
@@ -30,30 +30,30 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:inputValue', value: string): void; // Emit event for v-model
-  (e: 'update:selectedShops', shops: string[]): void; // Emit event for selected shops
+  (e: 'update:inputValue', value: string): void;
+  (e: 'update:selectedShops', shops: string[]): void;
 }>();
 
 const handleInput = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-  emit('update:inputValue', value); // Emit the new value to parent
+  emit('update:inputValue', value);
 };
 
 const clearFilter = () => {
-  emit('update:selectedShops', []); // Emit an empty array to clear selected shops
+  emit('update:selectedShops', []);
 };
 
 const toggleShop = (shop: string) => {
-  const currentShops = [...props.selectedShops]; // Create a copy of the current selected shops
+  const currentShops = [...props.selectedShops];
   const index = currentShops.indexOf(shop);
 
   if (index === -1) {
-    currentShops.push(shop); // Add shop if not already selected
+    currentShops.push(shop);
   } else {
-    currentShops.splice(index, 1); // Remove shop if already selected
+    currentShops.splice(index, 1);
   }
 
-  emit('update:selectedShops', currentShops); // Emit the updated list of selected shops
+  emit('update:selectedShops', currentShops);
 };
 </script>
 
