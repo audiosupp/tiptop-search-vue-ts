@@ -1,7 +1,8 @@
 <template>
   <form @submit.prevent="handleSubmit" class="flex justify-center w-full mt-4 input-searchbar-wrapper">
     <div class="input-icon-wrapper">
-      <InputText v-model="localQuery" placeholder="Поиск" :loading="loading" class="w-full" size="large" />
+      <InputText v-model="localQuery" placeholder="Поиск" :loading="loading" class="w-full" size="large"
+        :disabled="loading" />
 
       <i v-if="!loading" class="pi pi-search search-icon"></i>
       <ProgressSpinner v-if="loading" class="spinner-icon" strokeWidth="8" fill="transparent" animationDuration=".5s"

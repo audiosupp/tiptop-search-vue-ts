@@ -6,7 +6,6 @@
     </div>
 
     <div class="p-4 w-full overflow-auto max-h-screen">
-
       <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
         <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
       </div>
@@ -70,7 +69,6 @@ const fetchProducts = async (query: string) => {
     error.value = (err as Error).message;
   } finally {
     loading.value = false;
-
   }
 };
 

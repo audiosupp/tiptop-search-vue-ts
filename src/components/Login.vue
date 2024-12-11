@@ -8,7 +8,7 @@
         <InputText v-model="password" type="password" placeholder="Пароль" required
           class="mt-1 mb-4 block w-full p-2 border rounded-md" />
 
-        <p v-if="error" class="text-red-500 mb-4">{{ error }}</p>
+        <p v-if="error" class="red-text mb-4">{{ error }}</p>
         <Button type="submit" :disabled="loading" :loading="loading" severity="p-success" aria-label="Loading"
           class="w-full" raised>
           {{ loading ? '' : 'Войти' }}
@@ -55,5 +55,9 @@ const handleSubmit = async () => {
 .spinner {
   width: 25px;
   height: 25px;
+}
+
+.red-text {
+  color: red;
 }
 </style>
