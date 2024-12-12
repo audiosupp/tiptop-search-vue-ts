@@ -4,22 +4,26 @@
       <img src="/src/assets/logo.png" alt="TipTop logo" class="mb-2 w-24" />
       <h1 class="text-lg font-semibold">TipTop</h1>
     </div>
+    <Transition>
+      <div class="p-4 w-full overflow-auto max-h-screen">
+        <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']" id="searchBarDiv">
+          <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
+        </div>
 
-    <div class="p-4 w-full overflow-auto max-h-screen">
-      <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']">
-        <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
+        <Transition>
+
+
+          <ProductList v-if="!loading && products.length > 0" :products="products" :api_url="API_URL" />
+
+        </Transition>
+
+        <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
+        <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
+
+        <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
+          :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
       </div>
-
-      <div v-if="error" class="text-red-500 text-center">{{ error }}</div>
-      <Transition>
-        <ProductList v-if="!loading && products.length > 0" :products="products" :api_url="API_URL" />
-      </Transition>
-      <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
-
-      <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
-        :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
-    </div>
-
+    </Transition>
   </ScrollPanel>
 </template>
 
@@ -40,6 +44,7 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const query = ref('');
 const hasSearched = ref(false);
+const changeSearchBarDiv = ref(hasSearched);
 const API_URL = import.meta.env.VITE_API_URL;
 
 
@@ -62,15 +67,17 @@ const fetchProducts = async (query: string) => {
   try {
     const response = await axios.get(`${API_URL}/api/search?query=${query}`);
     products.value = response.data;
-    hasSearched.value = true;
-
     router.push({ path: '/search', query: { query } });
   } catch (err) {
     error.value = (err as Error).message;
   } finally {
-    loading.value = false;
+    setTimeout(() => {
+      loading.value = false;
+      hasSearched.value = true;
+    }, 1000);
   }
 };
+
 
 // const debouncedFetchProducts = debounce(fetchProducts, 1000);
 

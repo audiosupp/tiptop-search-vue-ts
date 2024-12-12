@@ -25,6 +25,7 @@ import ImageModal from './ImageModal.vue';
 import Filter from './Filter.vue';
 import ProductTable from './ProductTable.vue';
 
+
 interface Product {
   title: string;
   price: number;
