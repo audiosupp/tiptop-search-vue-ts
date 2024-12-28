@@ -1,12 +1,16 @@
 <template>
   <Dialog ref="maxDialog" :visible="isVisible" maximizable header="Title" class="w-full" @show="biggifyDialog">
-    <div class="container p-8">
+    <div class="container">
       <Carousel class="" :value="images" :numVisible="1" :responsiveOptions="responsiveOptions" circular>
         <template #item="{ data }">
-          <div class="img-container p-36">
-            <Image :src="data.url" :alt="data.productTitle" class="img" @click="$emit('close')" />
-            <a :href="data.productUrl" class="img-link"><span class="mb-4 font-medium">{{ data.productTitle
-                }}</span></a>
+          <div class="flex flex-col justify-center items-center">
+            <div class="img-container min-h-screen max-h-screen object-cover size-6/12">
+              <Image :src="data.url" :alt="data.productTitle" class="img object-scale-down size-fit"
+                @click="$emit('close')" />
+            </div>
+            <div> <a :href="data.productUrl" class="img-link underline"><span class="mb-4 font-bold">{{
+              data.productTitle
+                  }}</span></a></div>
           </div>
         </template>
       </Carousel>
@@ -76,7 +80,7 @@ const responsiveOptions = ref([
 
 <style scoped>
 .container {
-  max-height: 80vh;
+  max-height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
@@ -85,33 +89,33 @@ const responsiveOptions = ref([
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  /* align-items: center;
-  justify-content: center; */
+  /* align-items: center; */
+  /* justify-content: center; */
   /* overflow: hidden; */
 }
 
 .img-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-height: 80vh;
-  max-width: 90vw;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
-.img {
-  max-width: 100%;
-  max-height: 100%;
-}
+/* .img {
+  width: 50%;
+  max-width: 90%;
+  max-height: calc(100vh - 255px);
+} */
 
 .img-link {
   position: absolute;
-  bottom: 32px;
+  bottom: 0px;
   font-size: 18px;
   text-align: center;
   display: block;
   width: 900px;
-  line-break: strict;
+  padding: 10px;
+  margin-left: -450px;
+  background-color: #fff;
 }
 </style>
