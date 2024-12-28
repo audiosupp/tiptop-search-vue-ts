@@ -5,16 +5,13 @@
       <h1 class="text-lg font-semibold">TipTop</h1>
     </div>
     <Transition>
-      <div class="p-4 w-full overflow-auto max-h-screen">
+      <div class="w-full p-4 overflow-auto max-h-screen">
         <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']" id="searchBarDiv">
           <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
         </div>
 
         <Transition>
-
-
           <ProductList v-if="!loading && products.length > 0" :products="products" :api_url="API_URL" />
-
         </Transition>
 
         <div v-if="error" class="text-red-500 text-center">{{ error }}</div>

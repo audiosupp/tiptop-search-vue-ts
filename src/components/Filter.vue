@@ -1,8 +1,8 @@
 <template>
   <div class="filter relative w-full">
     <i class="pi pi-filter absolute left-3 top-1/2 transform -translate-y-1/2 text-surface-400"></i>
-    <InputText :value="inputValue" placeholder="Фильтр по названию или магазину" @input="handleInput"
-      class="pl-10 w-full" size="large" />
+    <InputText :value="inputValue" placeholder="Фильтр по названию или магазину" @input="handleInput" class="w-full"
+      size="large" />
   </div>
 
   <div class="shopButtons">
@@ -67,13 +67,18 @@ const toggleShop = (shop: string) => {
   padding-left: 30px;
 }
 
-.pi-filter {
+.p-inputtext:focus {
+  outline-offset: -2px !important;
+}
+
+
+/* .pi-filter {
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-}
+} */
 
 .shopButtons {
   display: flex;

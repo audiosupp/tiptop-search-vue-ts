@@ -115,16 +115,12 @@ watch(inputValue, (newValue) => {
   }
 });
 
-
-
-
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price).replace(/,/g, '.');
 };
-
 
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {

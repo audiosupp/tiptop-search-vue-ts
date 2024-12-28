@@ -51,6 +51,11 @@ const handleSubmit = async () => {
   padding-left: 30px;
 }
 
+.p-inputtext:focus {
+  outline-offset: -2px !important;
+}
+
+
 .search-icon {
   position: absolute;
   left: 10px;
