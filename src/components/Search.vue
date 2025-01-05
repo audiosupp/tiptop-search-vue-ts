@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import SearchBar from './SearchBar.vue';
 import ProductList from './ProductList.vue';
@@ -41,21 +41,8 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const query = ref('');
 const hasSearched = ref(false);
-const changeSearchBarDiv = ref(hasSearched);
 const API_URL = import.meta.env.VITE_API_URL;
 
-
-// function debounce(func: Function, delay: number) {
-//   let timeoutId: ReturnType<typeof setTimeout>;
-//   return (...args: any[]) => {
-//     if (timeoutId) {
-//       clearTimeout(timeoutId);
-//     }
-//     timeoutId = setTimeout(() => {
-//       func(...args);
-//     }, delay);
-//   };
-// }
 
 const fetchProducts = async (query: string) => {
   loading.value = true;
@@ -68,27 +55,36 @@ const fetchProducts = async (query: string) => {
   } catch (err) {
     error.value = (err as Error).message;
   } finally {
-    setTimeout(() => {
-      loading.value = false;
-      hasSearched.value = true;
-    }, 1000);
+    loading.value = false;
+    //hasSearched.value = true;
+    // setTimeout(() => {
+    //   loading.value = false;
+    //   hasSearched.value = true;
+    // }, 1000);
   }
 };
 
-
-// const debouncedFetchProducts = debounce(fetchProducts, 1000);
-
-watch(() => route.query.query, (newQuery) => {
-  if (newQuery) {
-    query.value = newQuery as string;
-    fetchProducts(newQuery as string);
+const initializeQuery = async () => {
+  if (route.query.query) {
+    query.value = route.query.query as string;
+    await fetchProducts(query.value);
+    hasSearched.value = true;
   }
+};
+
+onMounted(() => {
+  initializeQuery();
 });
 
-if (route.query.query) {
-  query.value = route.query.query as string;
-  fetchProducts(route.query.query as string);
-}
+watch(() => route.query.query, async (newQuery) => {
+  if (newQuery) {
+    query.value = newQuery as string;
+    await fetchProducts(newQuery as string);
+    await nextTick(() => {
+      hasSearched.value = true;
+    });
+  }
+});
 
 </script>
 

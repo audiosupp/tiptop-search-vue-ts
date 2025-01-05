@@ -45,7 +45,6 @@ const props = defineProps<{
   api_url: string;
 }>();
 
-
 const fetchedImages = ref<FetchedImage[]>([]);
 
 const loading = ref(false);
