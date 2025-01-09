@@ -49,7 +49,7 @@ const fetchProducts = async (query: string) => {
   error.value = null;
 
   try {
-    const response = await axios.get(`${API_URL}/api/search?query=${query}`);
+    const response = await axios.get(`${API_URL}/search?query=${query}`);
     products.value = response.data;
     router.push({ path: '/search', query: { query } });
   } catch (err) {

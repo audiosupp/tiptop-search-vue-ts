@@ -123,7 +123,7 @@ const formatPrice = (price: number): string => {
 
 const fetchImagesForProduct = async (shop: string, url: string) => {
   try {
-    const response = await axios.get(`${props.api_url}/api/pictures?shop=${shop}&url=${url}`);
+    const response = await axios.get(`${props.api_url}/pictures?shop=${shop}&url=${url}`);
 
     if (Array.isArray(response.data) && response.data.length > 0) {
       fetchedImages.value = response.data.map(imageUrl => ({
