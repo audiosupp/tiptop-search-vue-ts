@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="scroll-container">
     <DataTable v-if="filteredProducts.length > 0" :value="filteredProducts" :loading="loading" rowKey="url"
-      :scrollable="true" class="p-component">
+      class="p-component" :metaKeySelection=false :scrollable="true">
       <Column field="image" header="">
         <template #body="{ data }">
           <div class="image-container">

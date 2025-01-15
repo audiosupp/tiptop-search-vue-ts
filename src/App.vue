@@ -1,5 +1,5 @@
 <template>
-  <div class="App min-h-screen flex flex-col bg-gray-100">
+  <div class="container mx-auto px-4 max-w-screen-xl max-h-screen bg-gray-100 overflow-hidden">
     <router-view />
   </div>
 </template>

@@ -5,7 +5,7 @@
       <h1 class="text-lg font-semibold">TipTop</h1>
     </div>
     <Transition>
-      <div class="w-full p-4 overflow-auto max-h-screen">
+      <div class="w-full p-4 overflow-auto max-h-screen scrollbar-hide">
         <div :class="['flex justify-center', !hasSearched ? 'w-2/3 mx-auto' : 'w-full']" id="searchBarDiv">
           <SearchBar :loading="loading" :query="query" @search="fetchProducts" />
         </div>
@@ -18,7 +18,7 @@
         <div v-if="!loading && hasSearched && products.length === 0" class="text-center">Ничего не найдено.</div>
 
         <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
-          :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
+          :buttonProps="{ severity: 'green', raised: true, rounded: true }" />
       </div>
     </Transition>
   </ScrollPanel>
@@ -56,11 +56,6 @@ const fetchProducts = async (query: string) => {
     error.value = (err as Error).message;
   } finally {
     loading.value = false;
-    //hasSearched.value = true;
-    // setTimeout(() => {
-    //   loading.value = false;
-    //   hasSearched.value = true;
-    // }, 1000);
   }
 };
 

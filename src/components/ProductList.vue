@@ -1,30 +1,22 @@
 <template>
-  <ScrollPanel>
-    <Filter :inputValue="inputValue" @update:inputValue="inputValue = $event" :selectedShops="selectedShops"
-      :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
-      @update:selectedShops="selectedShops = $event" />
+  <Filter :inputValue="inputValue" @update:inputValue="inputValue = $event" :selectedShops="selectedShops"
+    :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
+    @update:selectedShops="selectedShops = $event" />
 
-    <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
-      :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
-      :formatPrice="formatPrice" />
+  <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
+    :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
+    :formatPrice="formatPrice" @update:selected="(event: boolean) => event" v-model:selection="selectedProduct" />
 
-    <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="isDialogVisible = false"
-      @update:visible="(event: boolean) => isDialogVisible = event" />
-
-    <ScrollTop target="parent" :threshold="20" icon="pi pi-arrow-up"
-      :buttonProps="{ severity: 'contrast', raised: true, rounded: true }" />
-  </ScrollPanel>
+  <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="handleModalClose"
+    @update:visible="(event: boolean) => isDialogVisible = event" />
 </template>
 
 <script lang="ts" setup>
 import axios from 'axios';
-import { defineProps, ref, computed, watch } from 'vue';
-import ScrollTop from 'primevue/scrolltop';
-import ScrollPanel from 'primevue/scrollpanel';
+import { defineProps, ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import ImageModal from './ImageModal.vue';
 import Filter from './Filter.vue';
 import ProductTable from './ProductTable.vue';
-
 
 interface Product {
   title: string;
@@ -59,6 +51,35 @@ const loadingImage = ref(true);
 const loadingImages = ref<Record<string, boolean>>({});
 const loadingProduct = ref<Record<string, boolean>>({});
 
+
+// Listen esc press manualy because vue esc btn pres won't delesect the row
+const handleModalClose = () => {
+  isDialogVisible.value = false;
+  selectedProduct.value = null;
+  removeFocusFromRow();
+};
+
+const removeFocusFromRow = () => {
+  const focusedElement = document.activeElement;
+  if (focusedElement instanceof HTMLElement) {
+    focusedElement.blur();
+  }
+};
+
+onMounted(() => {
+  document.addEventListener('keydown', handleEscKeyPress);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleEscKeyPress);
+});
+
+const handleEscKeyPress = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    isDialogVisible.value = false;
+  }
+};
+
 const onImageLoad = (url: string) => {
   loadingImages.value[url] = false;
 };
@@ -66,11 +87,6 @@ const onImageError = (url: string) => {
   console.warn(`Failed to load image at ${url}`);
   loadingImages.value[url] = false;
 };
-
-// const emit = defineEmits<{
-//   (e: 'showModal', shop: string, url: string): void;
-// }>();
-
 
 const uniqueShops = computed(() => {
   const shops = new Set(props.products.map(product => product.shop));
@@ -91,6 +107,7 @@ const filteredProducts = computed(() => {
 
   return products;
 });
+
 
 const shopProductCounts = computed(() => {
   const counts: Record<string, number> = {};

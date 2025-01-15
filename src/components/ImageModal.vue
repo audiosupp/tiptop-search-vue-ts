@@ -1,19 +1,26 @@
-<template>
-  <Dialog ref="maxDialog" :visible="isVisible" maximizable header="Title" class="w-full" @show="biggifyDialog">
-    <div class="container">
-      <Carousel class="" :value="images" :numVisible="1" :responsiveOptions="responsiveOptions" circular>
-        <template #item="{ data }">
-          <div class="flex flex-col justify-center items-center">
-            <div class="img-container min-h-screen max-h-screen object-cover size-6/12">
-              <Image :src="data.url" :alt="data.productTitle" class="img object-scale-down size-fit"
-                @click="$emit('close')" />
+<template class="overflow-hidden">
+  <Dialog ref="maxDialog" :visible="isVisible" maximizable header="Title" class="flex h-screen w-full overflow-hidden "
+    @show="biggifyDialog" @update:visible="handleVisibilityChange" :showHeader="false" :blockScroll="true" :minX="0"
+    :minY="0" @hide="emit('close')">
+    <div class="container flex h-screen w-full m-auto overflow-hidden ">
+      <div class="m-auto flex flex-col justify-center ">
+        <Carousel containerClass="overflow-hidden" :value="images" :numVisible="1"
+          :responsiveOptions="responsiveOptions" circular>
+          <template #item="{ data }">
+            <div class="flex flex-col min-h-screen m-auto">
+              <div class="img-container max-h-screen object-cover  m-auto ">
+                <Image :src="data.url" :alt="data.productTitle" class="img object-scale-down size-fit"
+                  @click="$emit('close')" />
+              </div>
+              <div class="flex"><a :href="data.productUrl"
+                  class="img-link underline flex m-auto justify-center text-center"><span
+                    class="mb-4 font-bold flex m-auto justify-center text-center">{{
+                      data.productTitle
+                    }}</span></a></div>
             </div>
-            <div> <a :href="data.productUrl" class="img-link underline"><span class="mb-4 font-bold">{{
-              data.productTitle
-                  }}</span></a></div>
-          </div>
-        </template>
-      </Carousel>
+          </template>
+        </Carousel>
+      </div>
     </div>
   </Dialog>
 </template>
@@ -33,8 +40,6 @@ function biggifyDialog() {
   }
 }
 
-const displayBasic = ref(false);
-
 interface FetchedImage {
   url: string;
   productUrl: string;
@@ -48,7 +53,16 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'close'): void;
+  (e: 'update:visible', value: boolean): void;
 }>();
+
+const handleVisibilityChange = (value: boolean) => {
+  if (!value) {
+    emit('update:visible', false);
+    emit('close');
+  }
+};
+
 
 const responsiveOptions = ref([
   {
@@ -79,21 +93,6 @@ const responsiveOptions = ref([
 </script>
 
 <style scoped>
-.container {
-  max-height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* overflow: hidden; */
-}
-
 .img-container {
   display: flex;
   justify-content: center;
@@ -101,21 +100,9 @@ const responsiveOptions = ref([
   overflow: hidden;
 }
 
-/* .img {
+.img {
   width: 50%;
   max-width: 90%;
   max-height: calc(100vh - 255px);
-} */
-
-.img-link {
-  position: absolute;
-  bottom: 0px;
-  font-size: 18px;
-  text-align: center;
-  display: block;
-  width: 900px;
-  padding: 10px;
-  margin-left: -450px;
-  background-color: #fff;
 }
 </style>
