@@ -1,14 +1,16 @@
 <template>
-  <Filter :inputValue="inputValue" @update:inputValue="inputValue = $event" :selectedShops="selectedShops"
-    :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
-    @update:selectedShops="selectedShops = $event" />
+  <div>
+    <Filter :inputValue="inputValue" @update:inputValue="inputValue = $event" :selectedShops="selectedShops"
+      :uniqueShops="uniqueShops" :totalProductCount="totalProductCount" :shopProductCounts="shopProductCounts"
+      @update:selectedShops="selectedShops = $event" />
 
-  <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
-    :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
-    :formatPrice="formatPrice" @update:selected="(event: boolean) => event" v-model:selection="selectedProduct" />
+    <ProductTable :filteredProducts="filteredProducts" :loading="loading" :loadingProduct="loadingProduct"
+      :showProductDetails="showProductDetails" :onImageLoad="onImageLoad" :onImageError="onImageError"
+      :formatPrice="formatPrice" @update:selected="(event: boolean) => event" v-model:selection="selectedProduct" />
 
-  <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="handleModalClose"
-    @update:visible="(event: boolean) => isDialogVisible = event" />
+    <ImageModal :images="fetchedImages" :isVisible="isDialogVisible" @close="handleModalClose"
+      @update:visible="(event: boolean) => isDialogVisible = event" />
+  </div>
 </template>
 
 <script lang="ts" setup>
