@@ -5,7 +5,7 @@
       size="large" />
   </div>
 
-  <div class="shopButtons">
+  <div class="flex gap-2 md:gap-3 mt-3 mb-3">
     <Button @click="clearFilter" :severity="selectedShops.length === 0 ? 'p-success' : 'secondary'" label="ВСЕ"
       :badge="totalProductCount.toString()" :badgeSeverity="selectedShops.length === 0 ? 'secondary' : 'p-success'"
       size="small" class="btn" raised />
@@ -69,12 +69,5 @@ const toggleShop = (shop: string) => {
 
 .p-inputtext:focus {
   outline-offset: -2px !important;
-}
-
-.shopButtons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 </style>

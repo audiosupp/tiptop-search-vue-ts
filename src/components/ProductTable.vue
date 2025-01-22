@@ -25,8 +25,8 @@
       </Column>
 
       <Column field="price" header="ЦЕНА" sortable>
-        <template #body="{ data }">
-          <span class="font-bold">{{ formatPrice(data.price) }} MDL</span>
+        <template #body="{ data }" class="">
+          <span class="font-bold price-inline whitespace-nowrap">{{ formatPrice(data.price) }} MDL</span>
         </template>
       </Column>
     </DataTable>

@@ -5,7 +5,7 @@
     <div class="container flex h-screen w-full m-auto overflow-hidden min-w-screen min-h-screen">
       <div class="m-auto flex flex-col justify-center max-w-screen max-h-screen">
         <Carousel :value="images" :numVisible="1" :responsiveOptions="responsiveOptions" circular
-          :showNavigators="images.length > 1" :showIndicators="false">
+          :showNavigators="images.length > 1" :showIndicators="false" :pt="carouselPT">
           <template #item="{ data }">
             <div class="flex flex-col min-h-screen m-auto">
               <div class="img-container max-h-screen object-cover m-auto">
@@ -30,6 +30,23 @@ import { defineProps, ref, computed } from 'vue';
 import Image from 'primevue/image';
 import Dialog from 'primevue/dialog';
 import Carousel from 'primevue/carousel';
+
+
+const carouselPT = {
+  pcPrevButton: {
+    root: '!size-16',
+    icon: {
+      class: '!size-12',
+    },
+  },
+  pcNextButton: {
+    root: '!size-16',
+    icon: {
+      class: '!size-12',
+    }
+  }
+};
+
 
 
 const maxDialog = ref<InstanceType<typeof Dialog> | any>(null);
@@ -64,7 +81,6 @@ const handleVisibilityChange = (value: boolean) => {
 };
 
 const showNavigators = computed(() => props.images.length > 1);
-
 
 const responsiveOptions = ref([
   {
