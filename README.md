@@ -1,5 +1,11 @@
 # Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Демонстрация работы приложения по поиску товаров (парсер с сервера, API запросы с фронт части).
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+![Демонстрация работы](https://github.com/audiosupp/tiptop-search-vue-ts/blob/main/output_optimized.gif?raw=true)
+
+
+[Видеоверсия](https://rutube.ru/video/c8d1ed0776ba9b95c399bb2006f43a9f/)
+
+
+*Репозиторий открыт на время поиска работы.*
